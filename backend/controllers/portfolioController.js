@@ -124,4 +124,25 @@ const deletePortfolio = asyncHandler(async (req, res) => {
     res.status(200).json({ message: "Portfolio deleted successfully", portfolio });
 });
 
-module.exports = { createPortfolio ,updatePortfolio ,deletePortfolio};
+const displayPortfolio = asyncHandler(async (req, res) => {
+    const userId = req.user.id;
+
+    if (!userId) {
+        res.status(401);
+        throw new Error("User is not authenticated");
+    }
+
+    const portfolio = await Portfolio.findOne({ user_id: userId });
+
+    if (!portfolio) {
+        res.status(404);
+        throw new Error("Portfolio not found for this user");
+    }
+
+    if(portfolio){
+        res.status(200).json(portfolio);
+    }
+
+})
+
+module.exports = { createPortfolio ,updatePortfolio ,deletePortfolio,displayPortfolio};
