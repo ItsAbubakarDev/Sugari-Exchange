@@ -18,13 +18,22 @@ const SignIn = () => {
       const response = await axios.post('http://localhost:3001/api/users/login', { email, password });
       
       if (response.data && response.data.accessToken) {
+        // Store the token in localStorage
+        localStorage.setItem('token', response.data.accessToken);
+        
         alert(`Logging in as ${email}`);
-        navigate('/dashboard');
+        navigate('/createportfolio');
       }
 
     } catch (err) {
       console.error('Login error:', err);
-      setError('Login failed. Please try again.');
+      
+      // Better error handling
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError('Login failed. Please try again.');
+      }
     }
   };
 
