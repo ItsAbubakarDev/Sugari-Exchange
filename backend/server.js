@@ -19,6 +19,7 @@ if (!MONGO_URI) {
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON requests
 app.use("/api/users", require("./routes/userRoutes"));
+app.use("api/portfolio",require("./routes/portfolioRoutes"))
 
 
 // Connect to MongoDB

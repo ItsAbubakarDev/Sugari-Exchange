@@ -34,8 +34,6 @@ const createPortfolio = asyncHandler(async (req, res) => {
     res.status(201).json(newPortfolio);
 });
 
-const asyncHandler = require('express-async-handler');
-const Portfolio = require('../models/portfolioModel');
 
 // @desc Update portfolio with buy or sell asset
 // @route POST /api/portfolio/updatePortfolio
