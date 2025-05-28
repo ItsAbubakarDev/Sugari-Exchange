@@ -1,0 +1,148 @@
+.footer {
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2d1810 100%);
+  color: #e2e8f0;
+  padding: 2rem 0 1rem;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ff8c42;
+  margin: 0;
+}
+
+.footer-logo {
+  height: 45px;
+  width: 45px;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
+}
+
+.footer-description {
+  color: #94a3b8;
+  line-height: 1.5;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin: 0;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.contact-item svg {
+  color: #ff8c42;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 140, 66, 0.1);
+  border: 1px solid rgba(255, 140, 66, 0.2);
+  border-radius: 8px;
+  color: #ff8c42;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: rgba(255, 140, 66, 0.2);
+  border-color: #ff8c42;
+  transform: translateY(-2px);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  padding-top: 1rem;
+  text-align: center;
+}
+
+.footer-bottom p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .footer {
+    padding: 1.5rem 0 1rem;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    text-align: center;
+  }
+  
+  .footer-container {
+    padding: 0 1rem;
+  }
+  
+  .contact-info {
+    align-items: center;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-title {
+    font-size: 1.25rem;
+  }
+  
+  .footer-description {
+    font-size: 0.85rem;
+  }
+  
+  .social-link {
+    width: 36px;
+    height: 36px;
+  }
+}
