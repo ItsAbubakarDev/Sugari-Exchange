@@ -19,7 +19,7 @@
 .portfolio-header h1 {
   font-size: 3rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dd700ad2 0%, #ea9a32e2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -29,7 +29,7 @@
 .portfolio-description {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #b0b0b0;
+  color: #d1d2cf;
   margin: 0;
 }
 
@@ -71,19 +71,19 @@
   font-size: 2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #ffffff;
+  color: #f47b2f;
 }
 
 .portfolio-info p {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #b0b0b0;
+  color: #f1e9e9;
   margin-bottom: 2rem;
 }
 
 /* Button Styles */
 .create-btn, .add-asset-btn, .submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f2b531d9 0%, #f18922 100%);
   color: white;
   border: none;
   padding: 1rem 2rem;
@@ -98,7 +98,7 @@
 
 .create-btn:hover, .add-asset-btn:hover, .submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 10px 30px rgba(214, 137, 36, 0.854);
 }
 
 .create-btn:disabled, .submit-btn:disabled {
@@ -123,6 +123,7 @@
   font-weight: 600;
   margin-bottom: 2rem;
   text-align: center;
+  color: #f47b2f;
 }
 
 .summary-cards {
@@ -149,7 +150,7 @@
 .summary-card h3 {
   font-size: 1rem;
   font-weight: 500;
-  color: #b0b0b0;
+  color: #f3eeee;
   margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -215,7 +216,7 @@
 
 .asset-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(102, 126, 234, 0.5);
+  border-color: rgba(222, 148, 38, 0.947);
 }
 
 .asset-header {
@@ -233,7 +234,7 @@
 }
 
 .exchange-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #f99747e4 0%, #df9a18 100%);
   color: white;
   padding: 0.3rem 0.8rem;
   border-radius: 20px;
@@ -308,7 +309,7 @@
 }
 
 .form-group label {
-  color: #b0b0b0;
+  color: #f1eaea;
   font-size: 0.9rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
@@ -322,7 +323,7 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
   padding: 0.8rem 1rem;
-  color: #ffffff;
+  color: #f0952e;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
@@ -330,7 +331,7 @@
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #ed852feb;
   background: rgba(255, 255, 255, 0.15);
 }
 
@@ -386,6 +387,9 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+
 
 @media (max-width: 480px) {
   .portfolio-container {

@@ -247,7 +247,7 @@ const Portfolio = () => {
               className="add-asset-btn"
               onClick={() => setShowAddAsset(!showAddAsset)}
             >
-              {showAddAsset ? "Cancel" : "Add/Update Asset"}
+              {showAddAsset ? "Cancel" : "Update Asset"}
             </button>
           </div>
 
