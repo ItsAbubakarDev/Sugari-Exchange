@@ -1,342 +1,651 @@
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, DollarSign, Activity, AlertCircle, CheckCircle } from 'lucide-react';
-import './Trade.css';
 
 const Trade = () => {
-  const [selectedCoin, setSelectedCoin] = useState('');
-  const [selectedExchange, setSelectedExchange] = useState('');
-  const [tradeType, setTradeType] = useState('buy');
-  const [amount, setAmount] = useState('');
-  const [price, setPrice] = useState('');
-  const [portfolio, setPortfolio] = useState([]);
-  const [tradeHistory, setTradeHistory] = useState([]);
-  const [balance, setBalance] = useState(10000); // Starting with $10,000
-  const [notification, setNotification] = useState(null);
+  const [portfolio, setPortfolio] = useState(null);
+  const [trades, setTrades] = useState([]);
+  const [tradeData, setTradeData] = useState({
+    exchange: '',
+    coinId: '',
+    price: '',
+    amount: '',
+    action: 'buy'
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
+  const [showTradeHistory, setShowTradeHistory] = useState(false);
 
-  // Mock cryptocurrency data
-  const cryptoData = [
-    { id: 'bitcoin', name: 'Bitcoin', symbol: 'BTC', price: 67500.00, change: 2.45 },
-    { id: 'ethereum', name: 'Ethereum', symbol: 'ETH', price: 3850.00, change: -1.20 },
-    { id: 'cardano', name: 'Cardano', symbol: 'ADA', price: 0.75, change: 5.80 },
-    { id: 'solana', name: 'Solana', symbol: 'SOL', price: 145.30, change: 3.15 },
-    { id: 'chainlink', name: 'Chainlink', symbol: 'LINK', price: 18.45, change: -0.85 }
-  ];
-
-  const exchanges = ['Binance', 'Coinbase', 'Kraken', 'KuCoin'];
+  // Popular exchanges and coins for demo
+  const exchanges = ['binance', 'coinbase', 'kraken', 'bybit', 'kucoin'];
+  const popularCoins = ['bitcoin', 'ethereum', 'cardano', 'solana', 'dogecoin', 'litecoin', 'chainlink', 'polkadot'];
 
   useEffect(() => {
-    if (selectedCoin) {
-      const coin = cryptoData.find(c => c.id === selectedCoin);
-      if (coin) {
-        setPrice(coin.price.toFixed(2));
-      }
-    }
-  }, [selectedCoin]);
+    fetchPortfolio();
+    fetchTradeHistory();
+  }, []);
 
-  const showNotification = (message, type = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => setNotification(null), 3000);
+  const fetchPortfolio = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3001/api/portfolio', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setPortfolio(data);
+      }
+    } catch (error) {
+      console.error('Error fetching portfolio:', error);
+    }
   };
 
-  const executeTrade = () => {
-    if (!selectedCoin || !selectedExchange || !amount || !price) {
-      showNotification('Please fill in all fields', 'error');
-      return;
+  const fetchTradeHistory = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3001/api/trades', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setTrades(data.slice(0, 10)); // Show last 10 trades
+      }
+    } catch (error) {
+      console.error('Error fetching trade history:', error);
     }
+  };
 
-    const tradeAmount = parseFloat(amount);
-    const tradePrice = parseFloat(price);
-    const totalValue = tradeAmount * tradePrice;
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setTradeData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-    if (tradeType === 'buy' && totalValue > balance) {
-      showNotification('Insufficient balance for this trade', 'error');
-      return;
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
 
-    const coin = cryptoData.find(c => c.id === selectedCoin);
-    const existingAsset = portfolio.find(
-      p => p.coinId === selectedCoin && p.exchange === selectedExchange
-    );
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('http://localhost:3001/api/trades/executeTrade', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...tradeData,
+          price: parseFloat(tradeData.price),
+          amount: parseFloat(tradeData.amount)
+        })
+      });
 
-    let newPortfolio = [...portfolio];
+      const data = await response.json();
 
-    if (tradeType === 'buy') {
-      setBalance(prev => prev - totalValue);
-      if (existingAsset) {
-        const index = newPortfolio.findIndex(
-          p => p.coinId === selectedCoin && p.exchange === selectedExchange
-        );
-        newPortfolio[index].amount += tradeAmount;
-        newPortfolio[index].avgPrice = 
-          ((newPortfolio[index].avgPrice * (newPortfolio[index].amount - tradeAmount)) + 
-           (tradePrice * tradeAmount)) / newPortfolio[index].amount;
-      } else {
-        newPortfolio.push({
-          coinId: selectedCoin,
-          coinName: coin.name,
-          coinSymbol: coin.symbol,
-          exchange: selectedExchange,
-          amount: tradeAmount,
-          avgPrice: tradePrice,
-          currentPrice: tradePrice
+      if (response.ok) {
+        setMessage(`Trade executed successfully! ${tradeData.action.toUpperCase()} ${tradeData.amount} ${tradeData.coinId} at ${tradeData.price}`);
+        setMessageType('success');
+        setPortfolio(data.portfolio);
+        
+        // Refresh trade history
+        fetchTradeHistory();
+        
+        // Reset form
+        setTradeData({
+          exchange: '',
+          coinId: '',
+          price: '',
+          amount: '',
+          action: 'buy'
         });
-      }
-    } else { // sell
-      if (!existingAsset || existingAsset.amount < tradeAmount) {
-        showNotification('Insufficient holdings to sell', 'error');
-        return;
-      }
-      
-      setBalance(prev => prev + totalValue);
-      const index = newPortfolio.findIndex(
-        p => p.coinId === selectedCoin && p.exchange === selectedExchange
-      );
-      
-      if (newPortfolio[index].amount === tradeAmount) {
-        newPortfolio.splice(index, 1);
       } else {
-        newPortfolio[index].amount -= tradeAmount;
+        setMessage(data.message || 'Trade execution failed');
+        setMessageType('error');
       }
+
+    } catch (error) {
+      setMessage('Network error occurred');
+      setMessageType('error');
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setPortfolio(newPortfolio);
+  const getAssetBalance = (exchange, coinId) => {
+    if (!portfolio?.assets) return 0;
+    const asset = portfolio.assets.find(a => a.exchange === exchange && a.coinId === coinId);
+    return asset ? asset.amount : 0;
+  };
 
-    const newTrade = {
-      id: Date.now(),
-      coinId: selectedCoin,
-      coinName: coin.name,
-      coinSymbol: coin.symbol,
-      exchange: selectedExchange,
-      action: tradeType,
-      amount: tradeAmount,
-      price: tradePrice,
-      total: totalValue,
-      timestamp: new Date().toLocaleString()
-    };
+  const calculateTradeValue = () => {
+    if (tradeData.price && tradeData.amount) {
+      return (parseFloat(tradeData.price) * parseFloat(tradeData.amount)).toFixed(2);
+    }
+    return '0.00';
+  };
 
-    setTradeHistory(prev => [newTrade, ...prev]);
-    showNotification(`${tradeType.toUpperCase()} order executed successfully!`);
+  const calculatePortfolioValue = () => {
+    if (!portfolio?.assets || portfolio.assets.length === 0) return 0;
+    return portfolio.assets.reduce((total, asset) => total + (asset.amount * asset.price), 0).toFixed(2);
+  };
 
-    // Reset form
-    setAmount('');
-    setSelectedCoin('');
-    setSelectedExchange('');
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const styles = {
+    container: {
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '2rem',
+      fontFamily: 'Arial, sans-serif',
+      backgroundColor: '#f8fafc',
+      minHeight: '100vh'
+    },
+    header: {
+      textAlign: 'center',
+      marginBottom: '3rem'
+    },
+    title: {
+      fontSize: '2.5rem',
+      fontWeight: 'bold',
+      color: '#1e293b',
+      marginBottom: '1rem'
+    },
+    description: {
+      fontSize: '1.1rem',
+      color: '#64748b',
+      lineHeight: '1.6',
+      maxWidth: '800px',
+      margin: '0 auto'
+    },
+    content: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '2rem',
+      '@media (max-Width: 768px)': {
+        gridTemplateColumns: '1fr'
+      }
+    },
+    tabContainer: {
+      display: 'flex',
+      marginBottom: '1.5rem',
+      backgroundColor: '#f1f5f9',
+      borderRadius: '8px',
+      padding: '4px'
+    },
+    tab: {
+      flex: 1,
+      padding: '0.75rem 1rem',
+      backgroundColor: 'transparent',
+      border: 'none',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      fontSize: '0.9rem',
+      fontWeight: '500',
+      transition: 'all 0.2s'
+    },
+    activeTab: {
+      backgroundColor: 'white',
+      color: '#3b82f6',
+      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+    },
+    inactiveTab: {
+      color: '#64748b'
+    },
+    formSection: {
+      backgroundColor: 'white',
+      borderRadius: '12px',
+      padding: '2rem',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+    },
+    formTitle: {
+      fontSize: '1.5rem',
+      fontWeight: '600',
+      color: '#1e293b',
+      marginBottom: '1.5rem'
+    },
+    formGroup: {
+      marginBottom: '1.5rem'
+    },
+    label: {
+      display: 'block',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      color: '#374151',
+      marginBottom: '0.5rem'
+    },
+    input: {
+      width: '100%',
+      padding: '0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      fontSize: '1rem',
+      transition: 'border-color 0.2s',
+      boxSizing: 'border-box'
+    },
+    select: {
+      width: '100%',
+      padding: '0.75rem',
+      border: '1px solid #d1d5db',
+      borderRadius: '6px',
+      fontSize: '1rem',
+      backgroundColor: 'white',
+      boxSizing: 'border-box'
+    },
+    formRow: {
+      display: 'grid',
+      gridTemplateColumns: '1fr 1fr',
+      gap: '1rem'
+    },
+    balanceInfo: {
+      padding: '0.75rem',
+      backgroundColor: '#f3f4f6',
+      borderRadius: '6px',
+      fontSize: '0.875rem',
+      color: '#4b5563',
+      marginBottom: '1rem'
+    },
+    tradeSummary: {
+      padding: '1rem',
+      backgroundColor: '#f8fafc',
+      borderRadius: '6px',
+      marginBottom: '1.5rem'
+    },
+    summaryRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    tradeValue: {
+      fontSize: '1.25rem',
+      fontWeight: '600',
+      color: '#059669'
+    },
+    tradeButton: {
+      width: '100%',
+      padding: '0.875rem',
+      fontSize: '1rem',
+      fontWeight: '600',
+      borderRadius: '6px',
+      border: 'none',
+      cursor: 'pointer',
+      transition: 'all 0.2s',
+      textTransform: 'uppercase'
+    },
+    buyButton: {
+      backgroundColor: '#059669',
+      color: 'white'
+    },
+    sellButton: {
+      backgroundColor: '#dc2626',
+      color: 'white'
+    },
+    portfolioSection: {
+      backgroundColor: 'white',
+      borderRadius: '12px',
+      padding: '2rem',
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+    },
+    assetsGrid: {
+      display: 'grid',
+      gap: '1rem'
+    },
+    assetCard: {
+      border: '1px solid #e5e7eb',
+      borderRadius: '8px',
+      padding: '1rem',
+      backgroundColor: '#fafafa'
+    },
+    assetHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: '0.75rem'
+    },
+    assetTitle: {
+      fontSize: '1.125rem',
+      fontWeight: '600',
+      color: '#1e293b',
+      margin: 0
+    },
+    exchangeBadge: {
+      padding: '0.25rem 0.5rem',
+      backgroundColor: '#3b82f6',
+      color: 'white',
+      borderRadius: '4px',
+      fontSize: '0.75rem',
+      textTransform: 'uppercase'
+    },
+    assetRow: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      marginBottom: '0.5rem'
+    },
+    assetValue: {
+      fontWeight: '600',
+      color: '#059669'
+    },
+    message: {
+      padding: '0.75rem',
+      borderRadius: '6px',
+      marginTop: '1rem',
+      fontSize: '0.875rem'
+    },
+    successMessage: {
+      backgroundColor: '#d1fae5',
+      color: '#065f46',
+      border: '1px solid #a7f3d0'
+    },
+    errorMessage: {
+      backgroundColor: '#fee2e2',
+      color: '#991b1b',
+      border: '1px solid #fca5a5'
+    },
+    emptyPortfolio: {
+      textAlign: 'center',
+      padding: '2rem',
+      color: '#6b7280'
+    },
+    portfolioValue: {
+      fontSize: '1.5rem',
+      fontWeight: '700',
+      color: '#059669',
+      textAlign: 'center',
+      marginBottom: '1.5rem',
+      padding: '1rem',
+      backgroundColor: '#f0fdf4',
+      borderRadius: '8px',
+      border: '2px solid #bbf7d0'
+    },
+    tradeHistoryContainer: {
+      maxHeight: '400px',
+      overflowY: 'auto'
+    },
+    tradeHistoryItem: {
+      padding: '1rem',
+      border: '1px solid #e5e7eb',
+      borderRadius: '8px',
+      marginBottom: '0.5rem',
+      backgroundColor: '#fafafa'
+    },
+    tradeAction: {
+      display: 'inline-block',
+      padding: '0.25rem 0.5rem',
+      borderRadius: '4px',
+      fontSize: '0.75rem',
+      fontWeight: '600',
+      textTransform: 'uppercase'
+    },
+    buyAction: {
+      backgroundColor: '#d1fae5',
+      color: '#065f46'
+    },
+    sellAction: {
+      backgroundColor: '#fee2e2',
+      color: '#991b1b'
+    }
   };
 
   return (
-    <div className="trade-container">
-      {/* Header Section */}
-      <div className="trade-header">
-        <h1>Cryptocurrency Trading Simulator</h1>
-        <p>Practice trading with real market data in a risk-free environment</p>
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h1 style={styles.title}>Crypto Trading Simulator</h1>
+        <p style={styles.description}>
+          Practice cryptocurrency trading with real-time portfolio management. 
+          Execute buy and sell orders across multiple exchanges and track your performance.
+          Your trades are simulated but your portfolio changes are persistent.
+        </p>
       </div>
 
-      {/* Notification */}
-      {notification && (
-        <div className={`notification ${notification.type}`}>
-          {notification.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
-          {notification.message}
-        </div>
-      )}
-
-      {/* Balance Card */}
-      <div className="balance-card">
-        <DollarSign className="balance-icon" />
-        <div>
-          <h3>Available Balance</h3>
-          <p>${balance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-        </div>
-      </div>
-
-      <div className="main-content">
-        {/* Trading Description */}
-        <div className="description-section">
-          <h2>About Cryptocurrency Trading</h2>
-          <div className="description-content">
-            <p>
-              Cryptocurrency trading involves buying and selling digital assets on various exchanges. 
-              This simulator allows you to practice trading strategies without risking real money.
-            </p>
-            
-            <div className="key-concepts">
-              <h3>Key Trading Concepts:</h3>
-              <ul>
-                <li><strong>Buy Orders:</strong> Purchase cryptocurrency at current or specified prices</li>
-                <li><strong>Sell Orders:</strong> Sell your holdings when you want to take profits or cut losses</li>
-                <li><strong>Portfolio Diversification:</strong> Spread investments across different cryptocurrencies</li>
-                <li><strong>Market Analysis:</strong> Study price movements and trends before making decisions</li>
-              </ul>
-            </div>
-
-            <div className="risk-warning">
-              <AlertCircle size={20} />
-              <p>
-                <strong>Risk Warning:</strong> Cryptocurrency trading involves significant risk. 
-                This simulator is for educational purposes only. Real trading can result in substantial losses.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Trading Interface */}
-        <div className="trading-section">
-          <h2>Trade Simulation</h2>
-          
-          {/* Market Data */}
-          <div className="market-data">
-            <h3>Live Market Prices</h3>
-            <div className="crypto-list">
-              {cryptoData.map(crypto => (
-                <div key={crypto.id} className="crypto-item">
-                  <div className="crypto-info">
-                    <span className="crypto-name">{crypto.name}</span>
-                    <span className="crypto-symbol">{crypto.symbol}</span>
-                  </div>
-                  <div className="crypto-price">
-                    <span className="price">${crypto.price.toLocaleString()}</span>
-                    <span className={`change ${crypto.change >= 0 ? 'positive' : 'negative'}`}>
-                      {crypto.change >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                      {crypto.change.toFixed(2)}%
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Trade Form */}
-          <div className="trade-form">
-            <h3>Execute Trade</h3>
-            
-            <div className="trade-type-selector">
-              <button 
-                className={`trade-type-btn ${tradeType === 'buy' ? 'active buy' : ''}`}
-                onClick={() => setTradeType('buy')}
+      <div style={styles.content}>
+        <div style={styles.formSection}>
+          <h2 style={styles.formTitle}>Execute Trade</h2>
+          <div onSubmit={handleSubmit}>
+            <div style={styles.formGroup}>
+              <label style={styles.label} htmlFor="action">Action</label>
+              <select
+                id="action"
+                name="action"
+                value={tradeData.action}
+                onChange={handleInputChange}
+                style={styles.select}
+                required
               >
-                BUY
-              </button>
-              <button 
-                className={`trade-type-btn ${tradeType === 'sell' ? 'active sell' : ''}`}
-                onClick={() => setTradeType('sell')}
-              >
-                SELL
-              </button>
+                <option value="buy">Buy</option>
+                <option value="sell">Sell</option>
+              </select>
             </div>
 
-            <div className="form-group">
-              <label>Cryptocurrency</label>
-              <select 
-                value={selectedCoin} 
-                onChange={(e) => setSelectedCoin(e.target.value)}
+            <div style={styles.formGroup}>
+              <label style={styles.label} htmlFor="exchange">Exchange</label>
+              <select
+                id="exchange"
+                name="exchange"
+                value={tradeData.exchange}
+                onChange={handleInputChange}
+                style={styles.select}
+                required
               >
-                <option value="">Select Cryptocurrency</option>
-                {cryptoData.map(crypto => (
-                  <option key={crypto.id} value={crypto.id}>
-                    {crypto.name} ({crypto.symbol})
+                <option value="">Select Exchange</option>
+                {exchanges.map(exchange => (
+                  <option key={exchange} value={exchange}>
+                    {exchange.charAt(0).toUpperCase() + exchange.slice(1)}
                   </option>
                 ))}
               </select>
             </div>
 
-            <div className="form-group">
-              <label>Exchange</label>
-              <select 
-                value={selectedExchange} 
-                onChange={(e) => setSelectedExchange(e.target.value)}
+            <div style={styles.formGroup}>
+              <label style={styles.label} htmlFor="coinId">Cryptocurrency</label>
+              <select
+                id="coinId"
+                name="coinId"
+                value={tradeData.coinId}
+                onChange={handleInputChange}
+                style={styles.select}
+                required
               >
-                <option value="">Select Exchange</option>
-                {exchanges.map(exchange => (
-                  <option key={exchange} value={exchange}>{exchange}</option>
+                <option value="">Select Coin</option>
+                {popularCoins.map(coin => (
+                  <option key={coin} value={coin}>
+                    {coin.charAt(0).toUpperCase() + coin.slice(1)}
+                  </option>
                 ))}
               </select>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label>Amount</label>
-                <input 
-                  type="number" 
+            <div style={styles.formRow}>
+              <div style={styles.formGroup}>
+                <label style={styles.label} htmlFor="price">Price (USD)</label>
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  value={tradeData.price}
+                  onChange={handleInputChange}
                   step="0.000001"
-                  value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  min="0"
                   placeholder="0.00"
+                  style={styles.input}
+                  required
                 />
               </div>
-              
-              <div className="form-group">
-                <label>Price ($)</label>
-                <input 
-                  type="number" 
-                  step="0.01"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
+
+              <div style={styles.formGroup}>
+                <label style={styles.label} htmlFor="amount">Amount</label>
+                <input
+                  type="number"
+                  id="amount"
+                  name="amount"
+                  value={tradeData.amount}
+                  onChange={handleInputChange}
+                  step="0.000001"
+                  min="0"
                   placeholder="0.00"
+                  style={styles.input}
+                  required
                 />
               </div>
             </div>
 
-            {amount && price && (
-              <div className="trade-summary">
-                <p>Total: ${(parseFloat(amount) * parseFloat(price)).toFixed(2)}</p>
+            {tradeData.exchange && tradeData.coinId && (
+              <div style={styles.balanceInfo}>
+                <span>Available Balance: {getAssetBalance(tradeData.exchange, tradeData.coinId)} {tradeData.coinId}</span>
               </div>
             )}
 
-            <button className="execute-btn" onClick={executeTrade}>
-              <Activity size={20} />
-              Execute {tradeType.toUpperCase()} Order
+            <div style={styles.tradeSummary}>
+              <div style={styles.summaryRow}>
+                <span>Trade Value:</span>
+                <span style={styles.tradeValue}>${calculateTradeValue()}</span>
+              </div>
+            </div>
+
+            <button 
+              type="button"
+              onClick={handleSubmit}
+              style={{
+                ...styles.tradeButton,
+                ...(tradeData.action === 'buy' ? styles.buyButton : styles.sellButton)
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Processing...' : `${tradeData.action.toUpperCase()} ${tradeData.coinId || 'CRYPTO'}`}
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Portfolio & History */}
-      <div className="bottom-section">
-        <div className="portfolio-section">
-          <h3>Your Portfolio</h3>
-          {portfolio.length === 0 ? (
-            <p className="empty-state">No holdings yet. Execute your first trade to get started!</p>
-          ) : (
-            <div className="portfolio-list">
-              {portfolio.map((asset, index) => (
-                <div key={index} className="portfolio-item">
-                  <div className="asset-info">
-                    <span className="asset-name">{asset.coinName}</span>
-                    <span className="asset-exchange">{asset.exchange}</span>
-                  </div>
-                  <div className="asset-details">
-                    <span className="asset-amount">{asset.amount.toFixed(6)} {asset.coinSymbol}</span>
-                    <span className="asset-value">
-                      ${(asset.amount * asset.currentPrice).toFixed(2)}
-                    </span>
-                  </div>
-                </div>
-              ))}
+          {message && (
+            <div style={{
+              ...styles.message,
+              ...(messageType === 'success' ? styles.successMessage : styles.errorMessage)
+            }}>
+              {message}
             </div>
           )}
         </div>
 
-        <div className="history-section">
-          <h3>Trade History</h3>
-          {tradeHistory.length === 0 ? (
-            <p className="empty-state">No trades executed yet.</p>
-          ) : (
-            <div className="history-list">
-              {tradeHistory.slice(0, 5).map(trade => (
-                <div key={trade.id} className="history-item">
-                  <div className="trade-info">
-                    <span className={`trade-action ${trade.action}`}>
-                      {trade.action.toUpperCase()}
-                    </span>
-                    <span className="trade-coin">{trade.coinName}</span>
-                  </div>
-                  <div className="trade-details">
-                    <span className="trade-amount">{trade.amount.toFixed(6)}</span>
-                    <span className="trade-total">${trade.total.toFixed(2)}</span>
-                  </div>
-                  <div className="trade-time">{trade.timestamp}</div>
+        <div style={styles.portfolioSection}>
+          <div style={styles.tabContainer}>
+            <button 
+              style={{
+                ...styles.tab,
+                ...(showTradeHistory ? styles.inactiveTab : styles.activeTab)
+              }}
+              onClick={() => setShowTradeHistory(false)}
+            >
+              Portfolio
+            </button>
+            <button 
+              style={{
+                ...styles.tab,
+                ...(showTradeHistory ? styles.activeTab : styles.inactiveTab)
+              }}
+              onClick={() => setShowTradeHistory(true)}
+            >
+              Trade History
+            </button>
+          </div>
+
+          {!showTradeHistory ? (
+            <>
+              <h2 style={styles.formTitle}>Current Portfolio</h2>
+              {portfolio?.assets && portfolio.assets.length > 0 && (
+                <div style={styles.portfolioValue}>
+                  Total Portfolio Value: ${calculatePortfolioValue()}
                 </div>
-              ))}
-            </div>
+              )}
+              <div>
+                {portfolio?.assets && portfolio.assets.length > 0 ? (
+                  <div style={styles.assetsGrid}>
+                    {portfolio.assets.map((asset, index) => (
+                      <div key={index} style={styles.assetCard}>
+                        <div style={styles.assetHeader}>
+                          <h3 style={styles.assetTitle}>{asset.coinId.charAt(0).toUpperCase() + asset.coinId.slice(1)}</h3>
+                          <span style={styles.exchangeBadge}>{asset.exchange}</span>
+                        </div>
+                        <div>
+                          <div style={styles.assetRow}>
+                            <span>Amount:</span>
+                            <span>{asset.amount}</span>
+                          </div>
+                          <div style={styles.assetRow}>
+                            <span>Price:</span>
+                            <span>${asset.price}</span>
+                          </div>
+                          <div style={styles.assetRow}>
+                            <span>Value:</span>
+                            <span style={styles.assetValue}>${(asset.amount * asset.price).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={styles.emptyPortfolio}>
+                    <p>No assets in portfolio yet. Start trading to build your portfolio!</p>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 style={styles.formTitle}>Recent Trades</h2>
+              <div style={styles.tradeHistoryContainer}>
+                {trades && trades.length > 0 ? (
+                  trades.map((trade, index) => (
+                    <div key={index} style={styles.tradeHistoryItem}>
+                      <div style={styles.assetHeader}>
+                        <div>
+                          <span style={{
+                            ...styles.tradeAction,
+                            ...(trade.action === 'buy' ? styles.buyAction : styles.sellAction)
+                          }}>
+                            {trade.action}
+                          </span>
+                          <span style={{ marginLeft: '0.5rem', fontWeight: '600' }}>
+                            {trade.coinId.charAt(0).toUpperCase() + trade.coinId.slice(1)}
+                          </span>
+                        </div>
+                        <span style={styles.exchangeBadge}>{trade.exchange}</span>
+                      </div>
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <div style={styles.assetRow}>
+                          <span>Amount:</span>
+                          <span>{trade.amount}</span>
+                        </div>
+                        <div style={styles.assetRow}>
+                          <span>Price:</span>
+                          <span>${trade.price}</span>
+                        </div>
+                        <div style={styles.assetRow}>
+                          <span>Total:</span>
+                          <span style={styles.assetValue}>${(trade.amount * trade.price).toFixed(2)}</span>
+                        </div>
+                        <div style={styles.assetRow}>
+                          <span>Date:</span>
+                          <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+                            {formatDate(trade.createdAt)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div style={styles.emptyPortfolio}>
+                    <p>No trades executed yet. Start trading to see your history!</p>
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
       </div>

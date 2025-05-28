@@ -1,4 +1,8 @@
 const mongoose = require("mongoose");
+const asyncHandler = require("express-async-handler");
+
+const Portfolio = require("../models/portfolioModel");
+const Trade = require("../models/tradeModel");
 
 const executeTrade = asyncHandler(async (req, res) => {
   const session = await mongoose.startSession();
@@ -61,3 +65,5 @@ const executeTrade = asyncHandler(async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 });
+
+module.exports = { executeTrade }; // ✅ named export

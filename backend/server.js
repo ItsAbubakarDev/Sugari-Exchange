@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json()); // Parses incoming JSON requests
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/portfolio",require("./routes/portfolioRoutes"))
-app.use("/api/trade",require("./routes/tradeRoutes"))
+app.use("/api/trades",require("./routes/tradeRoutes"))
 
 
 // Connect to MongoDB

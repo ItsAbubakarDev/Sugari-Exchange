@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const validateToken = require("../middlewares/validateToken"); // adjust path if needed
+const validateToken = require("../middlewares/validateToken"); // ✅ only once
 const { executeTrade } = require("../controllers/tradeController");
 
-router.post("/executeTrade", executeTrade);  
+router.post("/executeTrade", validateToken, executeTrade);  
 
 module.exports = router;
