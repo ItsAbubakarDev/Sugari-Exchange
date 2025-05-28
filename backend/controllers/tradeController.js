@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 
 const Portfolio = require("../models/portfolioModel");
 const Trade = require("../models/tradeModel");
+const TradeHistory = require("../models/tradeHistoryModel"); // ✅ Make sure this is imported
 
 const executeTrade = asyncHandler(async (req, res) => {
   const session = await mongoose.startSession();
@@ -20,7 +21,7 @@ const executeTrade = asyncHandler(async (req, res) => {
     if (!portfolio) throw new Error("Portfolio not found");
 
     const assetIndex = portfolio.assets.findIndex(
-      a => a.exchange === exchange && a.coinId === coinId
+      (a) => a.exchange === exchange && a.coinId === coinId
     );
 
     if (action === "sell") {
@@ -31,28 +32,30 @@ const executeTrade = asyncHandler(async (req, res) => {
       if (portfolio.assets[assetIndex].amount === 0) {
         portfolio.assets.splice(assetIndex, 1);
       }
-    } else {
+    } else if (action === "buy") {
       if (assetIndex >= 0) {
         portfolio.assets[assetIndex].amount += amount;
         portfolio.assets[assetIndex].price = price;
       } else {
         portfolio.assets.push({ exchange, coinId, price, amount });
       }
+    } else {
+      throw new Error("Invalid action");
     }
 
     await portfolio.save({ session });
 
-    const newTrade = await Trade.create(
-      [{
-        user_id: userId,
-        exchange,
-        coinId,
-        price,
-        amount,
-        action,
-      }],
-      { session }
-    );
+    const tradeData = {
+      user_id: userId,
+      exchange,
+      coinId,
+      price,
+      amount,
+      action,
+    };
+
+    const newTrade = await Trade.create([tradeData], { session });
+    await TradeHistory.create([tradeData], { session });
 
     await session.commitTransaction();
     session.endSession();
@@ -66,4 +69,4 @@ const executeTrade = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { executeTrade }; // ✅ named export
+module.exports = { executeTrade };
