@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Add this import
 import "./portfolio.css";
 
 const Portfolio = () => {
+  const navigate = useNavigate(); // Add this hook
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -161,6 +163,11 @@ const Portfolio = () => {
     }));
   };
 
+  // Add function to handle navigation to trade page
+  const handleGoToTrade = () => {
+    navigate('/trade'); // Adjust the route path as needed
+  };
+
   return (
     <div className="portfolio-container">
       <div className="portfolio-header">
@@ -248,6 +255,12 @@ const Portfolio = () => {
               onClick={() => setShowAddAsset(!showAddAsset)}
             >
               {showAddAsset ? "Cancel" : "Update Asset"}
+            </button>
+            <button 
+              className="trade-btn"
+              onClick={handleGoToTrade}
+            >
+              Go to Trade
             </button>
           </div>
 

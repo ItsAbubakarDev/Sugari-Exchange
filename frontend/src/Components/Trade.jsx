@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Trade.css';
 
 const Trade = () => {
+  const navigate = useNavigate();
   const [portfolio, setPortfolio] = useState(null);
   const [trades, setTrades] = useState([]);
   const [tradeData, setTradeData] = useState({
@@ -126,8 +128,23 @@ const Trade = () => {
     return asset ? asset.amount : 0;
   };
 
+  // Navigate to Trade History page
+  const handleViewTradeHistory = () => {
+    navigate('/trade-history');
+  };
+
   return (
     <div className="container">
+      {/* Navigation Bar */}
+      <div className="trade-navigation">
+        <button 
+          className="trade-nav-button"
+          onClick={handleViewTradeHistory}
+        >
+          📊 View Trade History
+        </button>
+      </div>
+
       {/* Header Section */}
       <div className="header">
         <h1 className="title">Crypto Trading Simulator</h1>

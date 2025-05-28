@@ -3,6 +3,7 @@ import SignUp from './Components/SignUp.jsx';
 import SignIn from './Components/SignIn.jsx'; 
 import Portfolio from './Components/Portfolio.jsx'; 
 import Trade from './Components/Trade.jsx';
+import TradeHistory from './Components/TradeHistory.jsx';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<SignIn />} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/trade" element={<Trade />} />
+        <Route path="/trade-history" element={<TradeHistory />} />
       </Routes>
     </BrowserRouter>
   );
