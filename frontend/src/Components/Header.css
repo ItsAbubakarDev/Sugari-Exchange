@@ -4,7 +4,6 @@ body, html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
 }
 
 .header {
@@ -15,9 +14,9 @@ body, html {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2.5px 30px; /* Reduced vertical padding from 5px to 2.5px */
-  background-color: #000000; /* Set to black */
-  border-bottom: 1px solid #222; /* Optional: darker border for contrast */
+  padding: 2.5px 30px;
+  background-color: #000000;
+  border-bottom: 1px solid #222;
   flex-wrap: wrap;
   z-index: 1000;
 }
@@ -25,12 +24,11 @@ body, html {
 .logo {
   display: flex;
   align-items: center;
-
 }
 
-.logo img{
-    height: 60px;
-    width : auto;
+.logo img {
+  height: 60px;
+  width: auto;
 }
 
 .nav-links {
@@ -56,7 +54,7 @@ body, html {
 
 .auth-buttons .login,
 .auth-buttons .signup {
-  padding: 0.2rem 0.8rem; /* Reduced vertical padding from 0.4rem to 0.2rem */
+  padding: 0.2rem 0.8rem;
   border: none;
   border-radius: 5px;
   font-weight: bold;
@@ -69,35 +67,32 @@ body, html {
   color: #dddddd;
 }
 
-
 .auth-buttons .signup {
-  display: inline-block;
   padding: 10px 35px;
   color: white;
-  text-decoration: none;
   background-color: #ff960b;
   border-radius: 25px;
   transition: all 0.3s ease;
-  margin-top: 0; /* remove any unintended offset */
+  text-decoration: none;
+  margin-top: 0;
 }
-
 
 @media (max-width: 768px) {
   .header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.4rem; /* Reduced gap from 0.8rem to 0.4rem */
+    gap: 0.4rem;
   }
 
   .nav-links {
     flex-direction: column;
-    gap: 0.2rem; /* Reduced gap from 0.4rem to 0.2rem */
+    gap: 0.2rem;
   }
 
   .auth-buttons {
     flex-direction: column;
     width: 100%;
-    gap: 0.2rem; /* Reduced gap from 0.4rem to 0.2rem */
+    gap: 0.2rem;
   }
 
   .auth-buttons .login,

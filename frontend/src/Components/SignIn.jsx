@@ -22,7 +22,7 @@ const SignIn = () => {
         localStorage.setItem('token', response.data.accessToken);
         
         alert(`Logging in as ${email}`);
-        navigate('/portfolio');
+        navigate('/');
       }
 
     } catch (err) {
