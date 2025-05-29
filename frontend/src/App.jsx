@@ -11,14 +11,9 @@ import Coins from './Components/coins.jsx';
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/portfolio" element={<Portfolio />} />
+      <Routes>   
+        <Route path="tradehistory" element={<TradeHistory />} />
         <Route path="/trade" element={<Trade />} />
-        <Route path="/trade-history" element={<TradeHistory />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<SignIn />} />
-        <Route path="/coins" element={<Coins />} />
       </Routes>
     </BrowserRouter>
   );
