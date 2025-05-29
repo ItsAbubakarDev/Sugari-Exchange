@@ -17,6 +17,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
+  padding-top: 4rem;
   background-color: #000000;
   min-height: 100vh;
 }

@@ -21,11 +21,11 @@ const Footer = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <Mail size={16} />
-                <span>support@sugarexchange.com</span>
+                <span>abubakarrashraf20@gmail.com</span>
               </div>
               <div className="contact-item">
                 <Phone size={16} />
-                <span>+1 (555) 123-4567</span>
+                <span>+92 324 1552881</span>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@ const Footer = () => {
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-link">
                 <Linkedin size={20} />
               </a>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="social-link">
+              <a href="https://github.com/ItsAbubakarDev/Sugari-Exchange" target="_blank" rel="noopener noreferrer" className="social-link">
                 <Github size={20} />
               </a>
             </div>

@@ -4,6 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  padding-top: 4rem;
   background-color: #0d0d0d; /* dark black background */
   color: #ffffff;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -67,12 +68,12 @@
 }
 
 /* Links */
-.links {
+.signup-links {
   margin-top: 1rem;
   text-align: center;
 }
 
-.links a {
+.signup-links a {
   display: block;
   color: #e78803ed;
   text-decoration: none;
@@ -80,7 +81,7 @@
   transition: color 0.3s;
 }
 
-.links a:hover {
+.signup-links a:hover {
   color: #e78803ed;
 }
 

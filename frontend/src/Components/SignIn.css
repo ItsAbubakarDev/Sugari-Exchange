@@ -77,18 +77,18 @@
 }
 
 /* Links */
-.links {
+.login-links {
   margin-top: 1rem;
   text-align: center;
 }
 
-.links a {
+.login-links a {
   color: #ffa500;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.3s ease;
 }
 
-.links a:hover {
+.login-links a:hover {
   color: #ffbb33;
 }

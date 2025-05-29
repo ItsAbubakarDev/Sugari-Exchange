@@ -17,7 +17,7 @@
   font-weight: 700;
   text-align: center;
   margin-bottom: 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #dca226 0%, #dd8c2e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -35,14 +35,14 @@
   color: #ff6b6b;
 }
 
-.coins-table {
+.featured-coins-table {
   background: #1a1b23;
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-.table-header {
+.featured-table-header {
   display: grid;
   grid-template-columns: 350px 180px 150px 180px 200px;
   align-items: center;
@@ -83,7 +83,7 @@
   text-align: right;
 }
 
-.coins-list {
+.featured-coins-list {
   background: #1a1b23;
 }
 

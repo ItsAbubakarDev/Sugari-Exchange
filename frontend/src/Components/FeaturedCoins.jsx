@@ -118,9 +118,9 @@ const FeaturedCoins = () => {
       <div className="featured-container">
         <h2 className="featured-title">Featured Cryptocurrencies</h2>
         
-        <div className="coins-table">
+        <div className="featured-coins-table">
           {/* Header Row */}
-          <div className="table-header">
+          <div className="featured-table-header">
             <div className="header-rank-name">
               <span className="rank-header">#</span>
               <span className="name-header">Name</span>
@@ -132,7 +132,7 @@ const FeaturedCoins = () => {
           </div>
 
           {/* Coin Rows */}
-          <div className="coins-list">
+          <div className="featured-coins-list">
             {coins.map((coin, index) => (
               <div key={coin.id} className="coin-row">
                 
@@ -183,10 +183,6 @@ const FeaturedCoins = () => {
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="footer">
-          <p>Data provided by CoinGecko • Updates every 30 seconds</p>
         </div>
       </div>
     </div>
