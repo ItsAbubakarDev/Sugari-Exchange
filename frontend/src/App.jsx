@@ -7,6 +7,7 @@ import Footer from './Components/Footer.jsx';
 import Header from './Components/Header.jsx';
 import SignUp from './Components/SignUp.jsx';
 import SignIn from './Components/SignIn.jsx';
+import Coins from './Components/coins.jsx';
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +16,9 @@ function App() {
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/trade" element={<Trade />} />
         <Route path="/trade-history" element={<TradeHistory />} />
-        
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/coins" element={<Coins />} />
       </Routes>
     </BrowserRouter>
   );

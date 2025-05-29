@@ -22,6 +22,7 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/portfolio",require("./routes/portfolioRoutes"))
 app.use("/api/trades",require("./routes/tradeRoutes"))
 app.use("/api/tradeHistory",require("./routes/tradeHistoryRoutes"))
+app.use("/api/coins",require("./routes/coinRoutes"))
 
 
 // Connect to MongoDB
