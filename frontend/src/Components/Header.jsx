@@ -19,7 +19,7 @@ const Header = () => {
       <nav className="nav-links">
         <a href="/">Home</a>
         <a href="trade">Trade</a>
-        <a href="#market">Market</a>
+        <a href="coins">Market</a>
         <a href="portfolio">Portfolio</a>
       </nav>
 

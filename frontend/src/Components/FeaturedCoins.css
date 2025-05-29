@@ -6,13 +6,13 @@
   padding: 20px 0;
 }
 
-.container {
+.featured-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.title {
+.featured-title {
   font-size: 2.5rem;
   font-weight: 700;
   text-align: center;
@@ -23,15 +23,15 @@
   background-clip: text;
 }
 
-.loading,
-.error {
+.featured-loading,
+.featured-error {
   text-align: center;
   padding: 40px;
   font-size: 1.2rem;
   color: #888;
 }
 
-.error {
+.featured-error {
   color: #ff6b6b;
 }
 

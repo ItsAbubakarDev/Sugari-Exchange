@@ -13,7 +13,7 @@ body {
 }
 
 /* Container */
-.container {
+.trade-container1 {
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
@@ -22,13 +22,13 @@ body {
 }
 
 /* Header Section */
-.header {
+.trade-header {
   text-align: center;
   margin-bottom: 4rem;
   padding: 2rem 0;
 }
 
-.title {
+.trade1-title {
   font-size: 3rem;
   font-weight: 700;
   color: #e17f30f5;
@@ -36,7 +36,7 @@ body {
   text-shadow: 0 2px 4px rgba(255, 102, 0, 0.3);
 }
 
-.description {
+.trade-description {
   font-size: 1.2rem;
   color: #ffffff;
   line-height: 1.7;
@@ -109,14 +109,14 @@ body {
   }
 }
 /* Info Cards */
-.info-cards {
+.trade-info-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
 
-.info-card {
+.trade-info-card {
   background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
   border: 2px solid #f47b2f;
   border-radius: 12px;
@@ -126,20 +126,20 @@ body {
   box-shadow: 0 4px 15px rgba(255, 102, 0, 0.1);
 }
 
-.info-card:hover {
+.trade-info-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 25px rgba(255, 102, 0, 0.2);
   border-color: #ff8533;
 }
 
-.info-card h3 {
+.trade-info-card h3 {
   color: #f47b2f;
   font-size: 1.4rem;
   font-weight: 600;
   margin-bottom: 1rem;
 }
 
-.info-card p {
+.trade-info-card p {
   color: #ffffff;
   font-size: 1rem;
   opacity: 0.9;
@@ -178,18 +178,18 @@ body {
   gap: 1.5rem;
 }
 
-.form-group {
+.trade-form-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-row {
+.trade-form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1.5rem;
 }
 
-.label {
+.trade-label {
   font-size: 1rem;
   font-weight: 500;
   color: #ffffff;
@@ -235,18 +235,18 @@ body {
   margin: 1.5rem 0;
 }
 
-.summary-row {
+.trade-summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.75rem;
 }
 
-.summary-row:last-child {
+.trade-summary-row:last-child {
   margin-bottom: 0;
 }
 
-.summary-label {
+.trade-summary-label {
   font-size: 1rem;
   color: #ffffff;
   font-weight: 500;
@@ -333,19 +333,19 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .container {
+  .trade-container1 {
     padding: 1rem;
   }
   
-  .title {
+  .trade1-title {
     font-size: 2.2rem;
   }
   
-  .description {
+  .trade-description {
     font-size: 1rem;
   }
   
-  .info-cards {
+  .trade-info-cards {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
@@ -354,7 +354,7 @@ body {
     padding: 2rem;
   }
   
-  .form-row {
+  .trade-form-row {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
@@ -365,11 +365,11 @@ body {
 }
 
 @media (max-width: 480px) {
-  .container {
+  .trade-container1 {
     padding: 0.5rem;
   }
   
-  .title {
+  .trade1-title {
     font-size: 1.8rem;
   }
   
@@ -377,7 +377,7 @@ body {
     padding: 1.5rem;
   }
   
-  .info-card {
+  .trade-info-card {
     padding: 1.5rem;
   }
 }

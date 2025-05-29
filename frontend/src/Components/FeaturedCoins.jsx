@@ -94,9 +94,9 @@ const FeaturedCoins = () => {
   if (loading) {
     return (
       <div className="featured-coins">
-        <div className="container">
-          <h2 className="title">Featured Cryptocurrencies</h2>
-          <div className="loading">Loading cryptocurrency data...</div>
+        <div className="featured-container">
+          <h2 className="featured-title">Featured Cryptocurrencies</h2>
+          <div className="featured-loading">Loading cryptocurrency data...</div>
         </div>
       </div>
     );
@@ -105,9 +105,9 @@ const FeaturedCoins = () => {
   if (error) {
     return (
       <div className="featured-coins">
-        <div className="container">
-          <h2 className="title">Featured Cryptocurrencies</h2>
-          <div className="error">Error: {error}</div>
+        <div className="featured-container">
+          <h2 className="featured-title">Featured Cryptocurrencies</h2>
+          <div className="featured-error">Error: {error}</div>
         </div>
       </div>
     );
@@ -115,8 +115,8 @@ const FeaturedCoins = () => {
 
   return (
     <div className="featured-coins">
-      <div className="container">
-        <h2 className="title">Featured Cryptocurrencies</h2>
+      <div className="featured-container">
+        <h2 className="featured-title">Featured Cryptocurrencies</h2>
         
         <div className="coins-table">
           {/* Header Row */}

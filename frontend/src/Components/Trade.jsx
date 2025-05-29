@@ -134,34 +134,34 @@ const Trade = () => {
   };
 
   return (
-    <div className="container">
+    <div className="trade-container1">
       {/* Navigation Bar */}
       <div className="trade-navigation">
         <button 
           className="trade-nav-button"
           onClick={handleViewTradeHistory}
         >
-          📊 View Trade History
+          📊 View Trade History``
         </button>
       </div>
 
       {/* Header Section */}
-      <div className="header">
-        <h1 className="title">Crypto Trading Simulator</h1>
-        <p className="description">
+      <div className="trade-header">
+        <h1 className="trade1-title">Crypto Trading Simulator</h1>
+        <p className="trade-description">
           Practice cryptocurrency trading with our advanced simulation platform. 
           Execute buy and sell orders across multiple exchanges and experience real-time trading scenarios.
         </p>
-        <div className="info-cards">
-          <div className="info-card">
+        <div className="trade-info-cards">
+          <div className="trade-info-card">
             <h3>Real-Time Simulation</h3>
             <p>Experience realistic trading conditions with live market data simulation</p>
           </div>
-          <div className="info-card">
+          <div className="trade-info-card">
             <h3>Multiple Exchanges</h3>
             <p>Trade across popular cryptocurrency exchanges like Binance, Coinbase, and more</p>
           </div>
-          <div className="info-card">
+          <div className="trade-info-card">
             <h3>Risk-Free Learning</h3>
             <p>Perfect your trading strategies without risking real money</p>
           </div>
@@ -173,8 +173,8 @@ const Trade = () => {
         <div className="trade-container">
           <h2 className="trade-title">Execute Trade</h2>
           <div className="trade-form">
-            <div className="form-group">
-              <label className="label" htmlFor="action">Trading Action</label>
+            <div className="trade-form-group">
+              <label className="trade-label" htmlFor="action">Trading Action</label>
               <select
                 id="action"
                 name="action"
@@ -188,9 +188,9 @@ const Trade = () => {
               </select>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="label" htmlFor="exchange">Exchange Platform</label>
+            <div className="trade-form-row">
+              <div className="trade-form-group">
+                <label className="trade-label" htmlFor="exchange">Exchange Platform</label>
                 <select
                   id="exchange"
                   name="exchange"
@@ -208,8 +208,8 @@ const Trade = () => {
                 </select>
               </div>
 
-              <div className="form-group">
-                <label className="label" htmlFor="coinId">Cryptocurrency</label>
+              <div className="trade-form-group">
+                <label className="trade-label" htmlFor="coinId">Cryptocurrency</label>
                 <select
                   id="coinId"
                   name="coinId"
@@ -228,9 +228,9 @@ const Trade = () => {
               </div>
             </div>
 
-            <div className="form-row">
-              <div className="form-group">
-                <label className="label" htmlFor="price">Price per Unit (USD)</label>
+            <div className="trade-form-row">
+              <div className="trade-form-group">
+                <label className="trade-label" htmlFor="price">Price per Unit (USD)</label>
                 <input
                   type="number"
                   id="price"
@@ -245,8 +245,8 @@ const Trade = () => {
                 />
               </div>
 
-              <div className="form-group">
-                <label className="label" htmlFor="amount">Amount to Trade</label>
+              <div className="trade-form-group">
+                <label className="trade-label" htmlFor="amount">Amount to Trade</label>
                 <input
                   type="number"
                   id="amount"
@@ -269,12 +269,12 @@ const Trade = () => {
             )}
 
             <div className="trade-summary">
-              <div className="summary-row">
-                <span className="summary-label">Total Trade Value:</span>
+              <div className="trade-summary-row">
+                <span className="trade-summary-label">Total Trade Value:</span>
                 <span className="trade-value">${calculateTradeValue()}</span>
               </div>
-              <div className="summary-row">
-                <span className="summary-label">Trading Pair:</span>
+              <div className="trade-summary-row">
+                <span className="trade-summary-label">Trading Pair:</span>
                 <span className="trade-pair">{tradeData.coinId ? `${tradeData.coinId.toUpperCase()}/USD` : 'Select cryptocurrency'}</span>
               </div>
             </div>
